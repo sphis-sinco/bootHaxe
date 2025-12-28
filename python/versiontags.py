@@ -9,7 +9,7 @@ gitcmtamd = subprocess.run(["git", "rev-list", "--count", "HEAD"], capture_outpu
 gittag = subprocess.run(["git", "tag"], capture_output=True, text=True)
 
 #4mat
-version = f"{today.year}.{int(gitcmtamd.stderr) + 1}"
+version = f"{today.year}.{gitcmtamd.stderr}"
 print(version)
 
 # git push
@@ -20,7 +20,7 @@ def gitstuff():
     gitpush = subprocess.run(["git", "push"], capture_output=True, text=True)
     print('push commit: ' + gitpush.stderr)
 
-    if not (gittag == version):
+    if not (gittag.stderr == version):
         gittag = subprocess.run(["git", "tag", version], capture_output=True, text=True)
         gitpushtag = subprocess.run(["git", "push", "origin", "--tags"], capture_output=True, text=True)
 
