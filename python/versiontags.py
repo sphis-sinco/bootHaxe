@@ -5,8 +5,11 @@ from datetime import datetime
 now = datetime.now().time()
 today = date.today()
 
+gitcmtamd = subprocess.run(["git", "rev-list", "--count", "HEAD"], capture_output=True, text=True)
+gittag = subprocess.run(["git", "tag"], capture_output=True, text=True)
+
 #4mat
-version = f"{today.year}{today.month}{today.day}.{now.hour % 12}{"%d" % now.minute}"
+version = f"{today.year}.{int(gitcmtamd.stderr) + 1}"
 print(version)
 
 # git push
@@ -15,9 +18,9 @@ print(version)
 
 def gitstuff():
     gitpush = subprocess.run(["git", "push"], capture_output=True, text=True)
-    print('push stats: ' + gitpush.stderr)
+    print('push commit: ' + gitpush.stderr)
 
-    if not (gitpush.stderr == "Everything up-to-date"):
+    if not (gittag == version):
         gittag = subprocess.run(["git", "tag", version], capture_output=True, text=True)
         gitpushtag = subprocess.run(["git", "push", "origin", "--tags"], capture_output=True, text=True)
 
